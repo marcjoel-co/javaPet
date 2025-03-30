@@ -9,6 +9,7 @@ For most of us this will be our very first coding project working with other dev
 - Sagisi
 - Rahon
 - Abon
+- Aguinaldo
 
 ## Resources
 - itch.io
