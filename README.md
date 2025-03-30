@@ -12,10 +12,11 @@ For most of us this will be our very first coding project working with other dev
 
 ## Resources
 - itch.io
-  >
-  >
+  
 - Pitch link Google docs
   > https://docs.google.com/document/d/1WNIEu2Ps3EeflxR8kMjGKgbxfk4ajUW5B7S9VvFH_i8/edit?usp=sharing
+- Final Project Details
+  > https://mvle4.mmsu.edu.ph/pluginfile.php/886850/mod_resource/content/1/CmpSc%20113%20Final%20Project.pdf  
 
 ### Videos Useful for the soul
 - Notes for the soul
@@ -24,3 +25,5 @@ For most of us this will be our very first coding project working with other dev
   
     - Collaborative Use for GitHub
    > https://youtu.be/k5D37W6h56o?si=Q6znJl_pJtqfBZm-
+   
+    > - 
