@@ -17,4 +17,8 @@ For most of us this will be our very first coding project working with other dev
 
 ### Videos Useful for the soul
 - Notes for the soul
-   > 
+    - How to use GitHub
+   > https://www.youtube.com/watch?v=v_1iqtOnUMg&t=126s
+  
+    - Collaborative Use for GitHub
+   > https://youtu.be/k5D37W6h56o?si=Q6znJl_pJtqfBZm-
