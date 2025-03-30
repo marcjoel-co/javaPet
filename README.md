@@ -11,7 +11,9 @@ For most of us this will be our very first coding project working with other dev
 - Abon
 
 ## Resources
-
+- itch.io
+  >
+  >
 - Pitch link Google docs
   > https://docs.google.com/document/d/1WNIEu2Ps3EeflxR8kMjGKgbxfk4ajUW5B7S9VvFH_i8/edit?usp=sharing
 
