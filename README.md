@@ -11,10 +11,13 @@ For most of us this will be our very first coding project working with other dev
 - Abon
 - Aguinaldo
 
-## Resources
-- itch.io
+## Resources/ References
+- itch.io: website for sprites for the future
   >
   >
+  
+
+  
 - Pitch link Google docs
   > https://docs.google.com/document/d/1WNIEu2Ps3EeflxR8kMjGKgbxfk4ajUW5B7S9VvFH_i8/edit?usp=sharing
 
@@ -22,7 +25,9 @@ For most of us this will be our very first coding project working with other dev
 - Notes for the soul
   
     - How to use GitHub
+  
    > https://www.youtube.com/watch?v=v_1iqtOnUMg&t=126s
+   > https://www.youtube.com/watch?v=PhG72KirgLo
   
     - Collaborative Use for GitHub
    > https://youtu.be/k5D37W6h56o?si=Q6znJl_pJtqfBZm-
