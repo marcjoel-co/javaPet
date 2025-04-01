@@ -11,7 +11,7 @@ public class Main {
         Panel panel = new Panel();
         window.add(panel);
         window.pack();
-
+        
         window.setLocationRelativeTo(null);
         window.setVisible(true);
     }

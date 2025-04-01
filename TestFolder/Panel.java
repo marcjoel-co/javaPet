@@ -1,8 +1,8 @@
-import javax.swing.JPanel;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Color;
+import javax.swing.JPanel;
 
 
 public class Panel extends JPanel implements Runnable{
@@ -26,14 +26,15 @@ public class Panel extends JPanel implements Runnable{
     int pY = 100;
     int plSp = 5;
 
-    Panel() {
+    public Panel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLUE);
         this.addKeyListener(keyInput);
         this.setFocusable(true);
+
     }
 
-    void startThread() {
+    public void startThread() {
 
         testThread = new Thread(this);
         testThread.start();
@@ -87,7 +88,7 @@ public class Panel extends JPanel implements Runnable{
 
 
     }
-
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
