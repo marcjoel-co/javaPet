@@ -10,6 +10,7 @@ public class Main {
         window.setTitle("JAT Game");
 
         Panel panel = new Panel();
+        panel.startThread();
         window.add(panel);
         window.pack();
         
