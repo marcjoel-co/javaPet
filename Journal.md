@@ -8,3 +8,7 @@ Context: This will become a journal for the purpose of a project in OOP
 ## Day 3(4/1/2025)
 > Joel 
   - Test a couple of "instrument" (such as Makefiles, AI and gathered some more resources)
+## Day 14(4/12/2025)
+> Cholo
+  - Created Frame, Panel and Basic mouse controls
+  - in development of implementing actions to the mouse controls
