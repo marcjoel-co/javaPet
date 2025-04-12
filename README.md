@@ -1,4 +1,4 @@
-# javaPet
+# LEAVE! : An Pick your Adventure Game!
 First collaborative coding project,
 
 ## personal context
