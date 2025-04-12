@@ -1,4 +1,4 @@
-# LEAVE! : An Pick your Adventure Game!
+# LEAVE! : An Pick your Story Adventure Game!
 First collaborative coding project,
 
 ## personal context
