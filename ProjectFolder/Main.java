@@ -8,7 +8,7 @@ class Main {
         JFrame gameWindow = new JFrame(); // instance of the game window
         PanelMod panel = new PanelMod(); // instance of the panel(contents of the window)
 
-        ImageIcon icon = new ImageIcon("Icon.png"); //instance of a ImageIcon (paints an image to code)
+        ImageIcon icon = new ImageIcon("Icon.png"); //instance of a ImageIcon (pre-loads an image to code)
         Image windIcon = icon.getImage(); //an instance of an image(represents graphical images)
 
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
