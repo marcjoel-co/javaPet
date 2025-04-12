@@ -1,5 +1,10 @@
-# LEAVE! : An Pick your Story Adventure Game!
+# LEAVE! : A Pick your Story Adventure Game!
 First collaborative coding project,
+
+## Leave! short synopsis
+	You are working at a local convenient store at 11:43 pm on a regular Wednesday, scanning beers, cigars, and snacks. All is well until a businessman dressed in a very formal way pays for a pack of gum and gives you a piece of candy. You eat the candy after the guy left. After your shift u felt a sharp pain in your head and immediately pass out. You wake up in a room, in a place you do not recognize. Why are you here? Who gave you the candy? What do they want? And most importantly, how do you escape?
+	
+
 
 ## personal context
 For most of us this will be our very first coding project working with other developers
