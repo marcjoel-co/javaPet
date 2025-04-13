@@ -6,7 +6,7 @@ public class PanelTypes extends JFrame {
     public BufferedImage backgroundimage;
 
     public PanelTypes() {
-        this.setTitle("square");
+        this.setTitle("Leave!");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(true);
         this.setSize(960, 420);
@@ -14,5 +14,9 @@ public class PanelTypes extends JFrame {
         this.setVisible(true);
 
 
+    }
+
+    public void setscene(BufferedImage backgroundimage) {
+        this.backgroundimage = backgroundimage;
     }
 }

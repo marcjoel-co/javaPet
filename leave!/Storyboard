@@ -1,0 +1,275 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import javax.sound.sampled.*;
+import javax.swing.*;
+
+public class StoryboardDemo extends JPanel {
+
+    private CardLayout cardLayout;
+    private JPanel container;
+    private Clip currentClip;
+    private Map<String, String> cardAudioMap; // Map < key, value> basically library from python
+    private JFrame parentFrame; // Reference to the parent JFrame
+
+    public StoryboardDemo(JFrame frame) {
+        this.parentFrame = frame; // Store the parent frame
+        cardLayout = new CardLayout();
+        container = new JPanel(cardLayout);
+        cardAudioMap = new HashMap<>();
+
+        // starting audio
+        PlayMusic("src/audiofiles/effects/clocktick.WAV");
+        PlayMusic("src/audiofiles/ambience/ambience_low..WAV");
+
+        // Card 1
+        JPanel card1 = new JPanel();
+        card1.setLayout(new GridBagLayout());
+        JLabel introduction = new JLabel(" Its 11:43 PM");
+        introduction.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        introduction.setForeground(Color.WHITE);
+        introduction.setHorizontalAlignment(SwingConstants.CENTER);
+        introduction.setVerticalAlignment(SwingConstants.CENTER);
+        card1.add(introduction);
+        card1.setBackground(Color.BLACK);
+        card1.setName("CARD1"); // Set the card name
+        cardAudioMap.put("CARD1", "src/audiofiles/effects/clocktick.WAV"); // Associate audio with card1
+        // cardAudioMap.put("CARD1_AMBIENCE", "src/audiofiles/ambience/ambience.WAV"); // Associate audio with card1
+
+        // Card 2
+        JPanel youhear = new JPanel();
+        youhear.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 0, 10, 0);
+        
+        JLabel youhearLabel = new JLabel("You hear someone knocking");
+        youhearLabel.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        youhearLabel.setForeground(Color.WHITE);
+        youhearLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        youhearLabel.setVerticalAlignment(SwingConstants.CENTER);
+        youhear.add(youhearLabel, gbc);
+        youhear.setBackground(Color.BLACK);
+        
+        JButton open = new JButton("Open the door?");
+        open.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // When the door is opened, show the last scene
+                stopCurrentClip();
+                parentFrame.dispose();
+                createLastScene();
+            }
+        });
+        youhear.add(open, gbc);
+        youhear.setName("youhear");
+        // cardAudioMap.put("youhear", "src/audiofiles/effects/ring.WAV"); // Associate audio with card2
+
+        // Card 3
+        JPanel theyare = new JPanel();
+        theyare.setLayout(new GridBagLayout());
+        JLabel theyareLabel = new JLabel("They are coming");
+        theyareLabel.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        theyareLabel.setForeground(Color.WHITE);
+        theyareLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        theyareLabel.setVerticalAlignment(SwingConstants.CENTER);
+        theyare.add(theyareLabel);
+        theyare.setBackground(Color.BLACK);
+        theyare.setName("theyare"); // Set the card name
+        cardAudioMap.put("theyare", "src/audiofiles/effects/ring.WAV");
+
+        container.add(card1, "CARD1");
+        container.add(youhear, "youhear");
+        container.add(theyare, "theyare");
+
+        JButton switchButton = new JButton("next");
+        switchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Switch to the next card when clicked
+                cardLayout.next(container);
+
+                // Get the current card name
+                Component currentCard = getCurrentCard(container);
+                if (currentCard != null) {
+                    String cardName = currentCard.getName();
+
+                    // Play audio associated with the new card
+                    if (cardName != null && cardAudioMap.containsKey(cardName)) {
+                        stopCurrentClip();
+                        currentClip = PlayMusic(cardAudioMap.get(cardName));
+                    }
+
+                    // Check if it's the third card ("theyare")
+                    if ("theyare".equals(cardName)) {
+                        // Create a timer to show the last scene after a brief delay
+                        Timer timer = new Timer(2000, event -> {
+                            stopCurrentClip();
+                            parentFrame.dispose();
+                            createLastScene();
+                        });
+                        timer.setRepeats(false);
+                        timer.start();
+                    }
+                }
+            }
+        });
+
+        // Add a KeyListener to handle space key press
+        this.setFocusable(true);
+        this.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    // Switch to the next card
+                    cardLayout.next(container);
+
+                    // Get the current card name
+                    Component currentCard = getCurrentCard(container);
+                    if (currentCard != null) {
+                        String cardName = currentCard.getName();
+
+                        // Play audio associated with the new card
+                        if (cardName != null && cardAudioMap.containsKey(cardName)) {
+                            stopCurrentClip();
+                            currentClip = PlayMusic(cardAudioMap.get(cardName));
+                        }
+
+                        // Check if it's the third card ("theyare")
+                        if ("theyare".equals(cardName)) {
+                            // Create a timer to show the last scene after a brief delay
+                            Timer timer = new Timer(2000, event -> {
+                                stopCurrentClip();
+                                parentFrame.dispose();
+                                createLastScene();
+                            });
+                            timer.setRepeats(false);
+                            timer.start();
+                        }
+                    }
+                }
+            }
+        });
+
+        this.setLayout(new BorderLayout());
+        this.add(container, BorderLayout.CENTER);
+        this.add(switchButton, BorderLayout.SOUTH);
+    }
+
+    private Component getCurrentCard(JPanel parent) {
+        for (Component comp : parent.getComponents()) {
+            if (comp.isVisible()) {
+                return comp;
+            }
+        }
+        return null;
+    }
+
+    private void stopCurrentClip() {
+        if (currentClip != null && currentClip.isRunning()) {
+            currentClip.stop();
+            currentClip.close();
+            currentClip = null;
+        }
+    }
+
+    // Method to create the last scene with BoxLayout
+    private void createLastScene() {
+        JFrame lastFrame = new JFrame("Final Scene");
+        lastFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        lastFrame.setSize(600, 400);
+        lastFrame.setLocationRelativeTo(null);
+        
+        // Create a panel with BoxLayout
+        JPanel boxPanel = new JPanel();
+        boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
+        boxPanel.setBackground(Color.BLACK);
+        
+        // Add some content to the last scene
+        JLabel titleLabel = new JLabel("THE END");
+        titleLabel.setFont(new Font("Times New Roman", Font.BOLD, 36));
+        titleLabel.setForeground(Color.RED);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        JLabel messageLabel = new JLabel("They found you...");
+        messageLabel.setFont(new Font("Times New Roman", Font.ITALIC, 24));
+        messageLabel.setForeground(Color.WHITE);
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        // Create a spooky image (just a red panel in this case)
+        JPanel imagePanel = new JPanel();
+        imagePanel.setBackground(new Color(100, 0, 0));
+        imagePanel.setPreferredSize(new Dimension(300, 200));
+        imagePanel.setMaximumSize(new Dimension(300, 200));
+        imagePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        // Add some spacing between components
+        boxPanel.add(Box.createVerticalStrut(30));
+        boxPanel.add(titleLabel);
+        boxPanel.add(Box.createVerticalStrut(20));
+        boxPanel.add(messageLabel);
+        boxPanel.add(Box.createVerticalStrut(30));
+        boxPanel.add(imagePanel);
+        
+        // Play a final sound effect
+        PlayMusic("src/audiofiles/effects/ring.WAV");
+        
+        lastFrame.add(boxPanel);
+        lastFrame.setVisible(true);
+    }
+
+    public static Clip PlayMusic(String location) {
+        return PlayMusic(location, false, 0); // Call the more general method with defaults
+    }
+
+    // Method to play music with optional looping and delay
+    public static Clip PlayMusic(String location, boolean loop, int delay) {
+        Clip clip = null;
+        try {
+            // Try to load the audio file as a resource
+            URL url = StoryboardDemo.class.getClassLoader().getResource(location);
+            if (url == null) {
+                // If not found as resource, try as a file
+                File audioFile = new File(location);
+                if (!audioFile.exists()) {
+                    System.err.println("Audio file not found: " + location);
+                    JOptionPane.showMessageDialog(null, "Audio file not found: " + location,
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                }
+                url = audioFile.toURI().toURL();
+            }
+
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+
+            // Create timer for delayed playback
+            final Clip finalClip = clip; // Create a final copy for the Timer
+            Timer timer = new Timer(delay, e -> {
+                if (loop) {
+                    finalClip.loop(Clip.LOOP_CONTINUOUSLY); // Loop indefinitely
+                } else {
+                    finalClip.start(); // Regular playback
+                }
+            });
+            timer.setRepeats(false); // One-time trigger
+            timer.start();
+
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            System.err.println("Error playing audio: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error playing audio: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return clip;
+    }
+
+}

@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,22 +15,21 @@ public class StoryboardDemo extends JPanel {
 
     private CardLayout cardLayout;
     private JPanel container;
-    private Clip currentClip; 
-    private Map<String, String> cardAudioMap; // Map < key, value> basically library from python
+    private Clip currentClip;
+    private Map<String, String> cardAudioMap;
+    private JFrame parentFrame;
 
-    public StoryboardDemo() {
+    public StoryboardDemo(JFrame frame) {
+        this.parentFrame = frame;
         cardLayout = new CardLayout();
         container = new JPanel(cardLayout);
         cardAudioMap = new HashMap<>();
 
-        
-        // starting audio
-
+        // Starting audio
         PlayMusic("src/audiofiles/effects/clocktick.WAV");
         PlayMusic("src/audiofiles/ambience/ambience_low..WAV");
 
-        // Card 1 
-        // theres prolly abtter way to do this, but hahahaha
+        // Card 1
         JPanel card1 = new JPanel();
         card1.setLayout(new GridBagLayout());
         JLabel introduction = new JLabel(" Its 11:43 PM");
@@ -39,29 +39,36 @@ public class StoryboardDemo extends JPanel {
         introduction.setVerticalAlignment(SwingConstants.CENTER);
         card1.add(introduction);
         card1.setBackground(Color.BLACK);
-        card1.setName("CARD1"); // Set the card name
-        cardAudioMap.put("CARD1", "src/audiofiles/effects/clocktick.WAV"); // Associate audio with card1 although does not work because im stoopid
-        // cardAudioMap.put("CARD1_AMBIENCE", "src/audiofiles/ambience/ambience.WAV"); // Associate audio with card1
-
+        card1.setName("CARD1");
+        cardAudioMap.put("CARD1", "src/audiofiles/effects/clocktick.WAV");
 
         // Card 2
         JPanel youhear = new JPanel();
         youhear.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 0, 10, 0);
+        
         JLabel youhearLabel = new JLabel("You hear someone knocking");
         youhearLabel.setFont(new Font("Times New Roman", Font.BOLD, 24));
         youhearLabel.setForeground(Color.WHITE);
         youhearLabel.setHorizontalAlignment(SwingConstants.CENTER);
         youhearLabel.setVerticalAlignment(SwingConstants.CENTER);
-        youhear.add(youhearLabel);
+        youhear.add(youhearLabel, gbc);
         youhear.setBackground(Color.BLACK);
-
-        youhear.add(new JButton(" Open the door?"));
-        youhear.setName("youhear"); 
-        /**
-         * This sets the key of the key balue pair to be youhear, so you ca play the audio later 
-         */
-        // cardAudioMap.put("youhear", "src/audiofiles/effects/ring.WAV"); // Associate audio with card2
-
+        
+        JButton open = new JButton("Open the door?");
+        open.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Button clicked!");
+                showBlackPanel();
+            }
+        });
+        youhear.add(open, gbc);
+        youhear.setName("youhear");
+        
         // Card 3
         JPanel theyare = new JPanel();
         theyare.setLayout(new GridBagLayout());
@@ -72,7 +79,7 @@ public class StoryboardDemo extends JPanel {
         theyareLabel.setVerticalAlignment(SwingConstants.CENTER);
         theyare.add(theyareLabel);
         theyare.setBackground(Color.BLACK);
-        theyare.setName("theyare"); // Set the card name
+        theyare.setName("theyare");
         cardAudioMap.put("theyare", "src/audiofiles/effects/ring.WAV");
 
         container.add(card1, "CARD1");
@@ -95,6 +102,16 @@ public class StoryboardDemo extends JPanel {
                     if (cardName != null && cardAudioMap.containsKey(cardName)) {
                         stopCurrentClip();
                         currentClip = PlayMusic(cardAudioMap.get(cardName));
+                    }
+
+                    // Check if it's the third card ("theyare")
+                    if ("theyare".equals(cardName)) {
+                        // Create a timer to show the black panel after a brief delay
+                        Timer timer = new Timer(2000, event -> {
+                            showBlackPanel();
+                        });
+                        timer.setRepeats(false);
+                        timer.start();
                     }
                 }
             }
@@ -119,6 +136,16 @@ public class StoryboardDemo extends JPanel {
                             stopCurrentClip();
                             currentClip = PlayMusic(cardAudioMap.get(cardName));
                         }
+
+                        // Check if it's the third card ("theyare")
+                        if ("theyare".equals(cardName)) {
+                            // Create a timer to show the black panel after a brief delay
+                            Timer timer = new Timer(2000, event -> {
+                                showBlackPanel();
+                            });
+                            timer.setRepeats(false);
+                            timer.start();
+                        }
                     }
                 }
             }
@@ -129,13 +156,79 @@ public class StoryboardDemo extends JPanel {
         this.add(switchButton, BorderLayout.SOUTH);
     }
 
+    // Method to show black panel and handle transition
+    private void showBlackPanel() {
+        stopCurrentClip();
+        
+        // Create a new JFrame for the pure black panel
+        JFrame blackFrame = new JFrame("Darkness");
+        blackFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Create a pure black panel
+        JPanel blackPanel = new JPanel();
+        blackPanel.setBackground(Color.BLACK);
+        
+        // Optional: Add a hidden message that appears after a delay
+        JLabel hiddenMessage = new JLabel("There is no escape");
+        hiddenMessage.setForeground(Color.RED);
+        hiddenMessage.setFont(new Font("Serif", Font.BOLD, 36));
+        hiddenMessage.setVisible(false);
+        blackPanel.setLayout(new GridBagLayout());
+        blackPanel.add(hiddenMessage);
+        
+        // Add the black panel to the frame
+        blackFrame.add(blackPanel);
+        
+        // Set frame to full screen
+        blackFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        blackFrame.setUndecorated(true); // Remove window decorations for true full screen
+        
+        // Make the frame visible
+        blackFrame.setVisible(true);
+        
+        // Play a scary sound if available
+        Clip scarySound = PlayMusic("src/audiofiles/effects/ring.WAV");
+        
+        // Timer to show hidden message after a delay
+        Timer messageTimer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hiddenMessage.setVisible(true);
+            }
+        });
+        messageTimer.setRepeats(false);
+        messageTimer.start();
+        
+        // Close the original frame after a short delay
+        Timer closeTimer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (parentFrame != null) {
+                    parentFrame.dispose();
+                }
+            }
+        });
+        closeTimer.setRepeats(false);
+        closeTimer.start();
+        
+        // Optional: Add a key listener to close the black panel on any key press
+        blackPanel.setFocusable(true);
+        blackPanel.requestFocus();
+        blackPanel.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
     private Component getCurrentCard(JPanel parent) {
         for (Component comp : parent.getComponents()) {
             if (comp.isVisible()) {
                 return comp;
             }
         }
-        return null; // Add this line
+        return null;
     }
 
     private void stopCurrentClip() {
@@ -149,7 +242,7 @@ public class StoryboardDemo extends JPanel {
     public static Clip PlayMusic(String location) {
         return PlayMusic(location, false, 0); // Call the more general method with defaults
     }
-    // medjo AI this and hindi pa tested so beware 
+
     public static Clip PlayMusic(String location, boolean loop, int delay) {
         Clip clip = null;
         try {
@@ -192,4 +285,3 @@ public class StoryboardDemo extends JPanel {
         return clip;
     }
 }
-
